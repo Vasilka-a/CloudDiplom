@@ -1,6 +1,6 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     <changeSet id="create_users_table" author="Nastya B">
@@ -9,7 +9,7 @@
             (
                 id       BIGSERIAL PRIMARY KEY,
                 login    varchar(256) unique not null,
-                password varchar(256) not null
+                password varchar(256)        not null
             );
         </sql>
     </changeSet>

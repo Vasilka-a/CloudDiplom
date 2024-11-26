@@ -11,5 +11,5 @@
         </sql>
     </changeSet>
 </databaseChangeLog>
-<!--login: user@user.user, password: user -->
- <!--login: mike@user.user, password: mike -->
+        <!--login: user@user.user, password: user -->
+        <!--login: mike@user.user, password: mike -->

@@ -35,6 +35,5 @@ public class ControllerAdvice {
         log.error(e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
 }
 
