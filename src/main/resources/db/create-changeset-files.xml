@@ -1,0 +1,19 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="create_users_table" author="Nastya B">
+        <sql>
+            create table files
+            (
+                id           BIGSERIAL PRIMARY KEY,
+                filename     varchar(256) unique not null,
+                edited_at    timestamp,
+                size         bigint not null,
+                file_content bytea not null,
+                user_id      bigserial references users (id) on delete set null
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>

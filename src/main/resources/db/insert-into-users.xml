@@ -1,0 +1,15 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="insert-users" author="Nastya B">
+        <sql>
+            insert into users (login, password)
+            values ('user@user.user', '$2a$12$/esFpvwUNvgUcNnKQ8HX9utoRavht1IMzp2.rXbpFWfv6/s0xDr42'),
+                   ('mike@user.user', '$2a$12$kRY2QRknQFshdcEZAC4jluX.JSmawbWJjPKlyxMSNDenIx5O./9fy');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
+<!--login: user@user.user, password: user -->
+ <!--login: mike@user.user, password: mike -->
