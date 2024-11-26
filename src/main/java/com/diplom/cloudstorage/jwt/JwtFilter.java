@@ -29,16 +29,12 @@ import java.util.Objects;
 public class JwtFilter extends OncePerRequestFilter {
     public static final String AUTHORIZATION = "auth-token";
 
-    private final HandlerExceptionResolver handlerExceptionResolver;
     private final JwtUtils jwtUtils;
     private final UserDetailsService userDetailsService;
 
-    public JwtFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService,
-                     HandlerExceptionResolver handlerExceptionResolver
-    ) {
+    public JwtFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
         this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
-        this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
     @Override
