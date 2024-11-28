@@ -1,15 +1,13 @@
 package com.diplom.cloudstorage.jwt;
 
+import com.diplom.cloudstorage.exceptions.BadCredentialsException;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -63,15 +61,13 @@ public class JwtFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
-
             } else {
                 throw new BadCredentialsException("Bearer token not set correctly");
             }
         } catch (ExpiredJwtException jwtException) {
-            request.setAttribute("exception", jwtException);
-        } catch (BadCredentialsException | UnsupportedJwtException | MalformedJwtException e) {
-            log.error("Filter exception: {}", e.getMessage());
-            request.setAttribute("exception", e);
+            log.error("Filter exception: {}", jwtException.getMessage());
+        } catch (Exception e) {
+            log.error("Cannot set user authentication: {}", e.getMessage());
         }
         filterChain.doFilter(request, response);
     }
