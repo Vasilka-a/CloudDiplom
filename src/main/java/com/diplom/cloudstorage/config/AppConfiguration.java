@@ -6,10 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-
 @Configuration
 public class AppConfiguration {
-
     private final UserRepository userRepository;
 
     public AppConfiguration(UserRepository userRepository) {
