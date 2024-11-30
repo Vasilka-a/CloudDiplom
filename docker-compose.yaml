@@ -1,21 +1,25 @@
 services:
   app:
-    build: ./
     image: 'cloudstorage:1.0'
+    build: .
     container_name: 'cloud-storage'
     ports:
       - '8080:8080'
-    depends_on:
-      - database
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgress
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_LIQUIBASE_ENABLED: true
+
+    depends_on:
+      - database
+    volumes:
+      - .postgres_data:/var/lib/postgresql/data
 
   database:
           image: postgres
-          container_name: cloudstoragedb
+          container_name: "db"
           environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgress

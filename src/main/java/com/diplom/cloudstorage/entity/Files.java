@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Data
+@Table(name = "files")
 public class Files {
     @Id
     @GeneratedValue

@@ -20,7 +20,9 @@ configurations {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
