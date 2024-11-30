@@ -57,13 +57,13 @@ public class TestContainersCloudStorage {
     private static AuthRequest authRequest;
 
     @Autowired
-    TestRestTemplate restTemplate;
+    private TestRestTemplate restTemplate;
 
     @Autowired
     private UserRepository userRepository;
 
     @BeforeAll
-    static void setUp2() {
+    static void setUp() {
         authRequest = AuthRequest.builder()
                 .login("user@user.user")
                 .password("user")

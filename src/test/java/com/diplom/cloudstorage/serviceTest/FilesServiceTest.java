@@ -1,4 +1,4 @@
-package com.diplom.cloudstorage;
+package com.diplom.cloudstorage.serviceTest;
 
 import com.diplom.cloudstorage.dtos.FileDto;
 import com.diplom.cloudstorage.entity.Files;
@@ -18,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -36,8 +35,6 @@ public class FilesServiceTest {
     private static final String FILE_NAME = "text.txt";
     @Autowired
     private FilesService filesService;
-    @Autowired
-    private MockMvc mockMvc;
     @MockitoBean
     private FilesRepository filesRepository;
     private User user;

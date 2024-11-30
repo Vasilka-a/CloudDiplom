@@ -1,4 +1,4 @@
-package com.diplom.cloudstorage;
+package com.diplom.cloudstorage.controllerTest;
 
 import com.diplom.cloudstorage.dtos.AuthRequest;
 import com.diplom.cloudstorage.dtos.AuthResponse;
