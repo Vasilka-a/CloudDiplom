@@ -2,7 +2,7 @@ package com.diplom.cloudstorage.controllerTest;
 
 import com.diplom.cloudstorage.dtos.AuthRequest;
 import com.diplom.cloudstorage.dtos.AuthResponse;
-import com.diplom.cloudstorage.entity.Files;
+import com.diplom.cloudstorage.entity.File;
 import com.diplom.cloudstorage.entity.User;
 import com.diplom.cloudstorage.repository.FilesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,15 +53,15 @@ public class FilesControllerTest {
 
     @Test
     void getFilesListWithLimitTest() throws Exception {
-        List<Files> filesList = List.of(
-                Files.builder().id(1L).filename("test.txt").createdAt(LocalDate.now()).size(1).fileContent("test".getBytes()).user(new User(1L, "user@user.user", "user")).build(),
-                Files.builder().id(2L).filename("test2.txt").createdAt(LocalDate.now()).size(2).fileContent("test2".getBytes()).user(new User(1L, "user@user.user", "user")).build(),
-                Files.builder().id(3L).filename("test3.txt").createdAt(LocalDate.now()).size(1).fileContent("test3".getBytes()).user(new User(1L, "user@user.user", "user")).build());
+        List<File> fileList = List.of(
+                File.builder().id(1L).filename("test.txt").createdAt(LocalDate.now()).size(1).fileContent("test".getBytes()).user(new User(1L, "user@user.user", "user")).build(),
+                File.builder().id(2L).filename("test2.txt").createdAt(LocalDate.now()).size(2).fileContent("test2".getBytes()).user(new User(1L, "user@user.user", "user")).build(),
+                File.builder().id(3L).filename("test3.txt").createdAt(LocalDate.now()).size(1).fileContent("test3".getBytes()).user(new User(1L, "user@user.user", "user")).build());
 
         User user = new User(1L, "user@user.user", "user");
 
         Mockito.when(this.filesRepository.getFilesByUserWithLimit(user.getId(), 3))
-                .thenReturn(filesList);
+                .thenReturn(fileList);
         AuthRequest request = AuthRequest.builder()
                 .login("user@user.user")
                 .password("user")
@@ -78,7 +78,7 @@ public class FilesControllerTest {
                         .param("limit", "3"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(filesList)));
+                .andExpect(content().json(objectMapper.writeValueAsString(fileList)));
     }
 
     @Test

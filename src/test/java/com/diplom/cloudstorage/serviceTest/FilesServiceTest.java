@@ -1,7 +1,6 @@
 package com.diplom.cloudstorage.serviceTest;
 
-import com.diplom.cloudstorage.dtos.FileDto;
-import com.diplom.cloudstorage.entity.Files;
+import com.diplom.cloudstorage.entity.File;
 import com.diplom.cloudstorage.entity.User;
 import com.diplom.cloudstorage.jwt.JwtUtils;
 import com.diplom.cloudstorage.repository.FilesRepository;
@@ -38,14 +37,14 @@ public class FilesServiceTest {
     @MockitoBean
     private FilesRepository filesRepository;
     private User user;
-    private Files fileFound;
+    private File fileFound;
     @MockitoBean
     private JwtUtils jwtUtils;
 
     @BeforeEach
     public void init() {
         user = User.builder().id(1L).login("user@user.user").password("user").build();
-        fileFound = Files.builder()
+        fileFound = File.builder()
                 .id(5L)
                 .filename(FILE_NAME)
                 .size(1)
@@ -61,7 +60,7 @@ public class FilesServiceTest {
         Mockito.when(filesRepository.findFilesByUserIdAndFilename(user.getId(), FILE_NAME))
                 .thenReturn(Optional.ofNullable(fileFound));
 
-        byte[] downloadFile = filesService.downloadFile(TOKEN, FILE_NAME);
+        byte[] downloadFile = filesService.downloadFile(user, FILE_NAME);
 
         Assertions.assertEquals(fileFound.getFileContent(), downloadFile);
     }
@@ -74,24 +73,24 @@ public class FilesServiceTest {
                 .thenReturn(Optional.of(fileFound));
         Mockito.when(filesRepository.deleteFilesByFilename(user.getId(), FILE_NAME)).thenReturn(1);
 
-        filesService.deleteFile(TOKEN, FILE_NAME);
+        filesService.deleteFile(user, FILE_NAME);
 
         verify(filesRepository).deleteFilesByFilename(user.getId(), FILE_NAME);
     }
 
     @Test
     void updateFileTestSuccessful() {
-        FileDto newFileName = new FileDto("newTestName.txt");
+        String newFileName = "newTestName.txt";
         Mockito.when(jwtUtils.getAuthenticatedUser(TOKEN)).thenReturn(user);
         Mockito.when(filesRepository.save(fileFound)).thenReturn(fileFound);
         Mockito.when(filesRepository.findFilesByUserIdAndFilename(user.getId(), FILE_NAME))
                 .thenReturn(Optional.of(fileFound));
-        Mockito.when(filesRepository.updateFileByFilename(newFileName.getFilename(), user.getId(), FILE_NAME))
+        Mockito.when(filesRepository.updateFileByFilename(newFileName, user.getId(), FILE_NAME))
                 .thenReturn(1);
 
-        filesService.updateFile(TOKEN, FILE_NAME, newFileName);
+        filesService.updateFile(user, FILE_NAME, newFileName);
 
-        verify(filesRepository).updateFileByFilename(newFileName.getFilename(), user.getId(), FILE_NAME);
+        verify(filesRepository).updateFileByFilename(newFileName, user.getId(), FILE_NAME);
     }
 
     @Test
@@ -103,7 +102,7 @@ public class FilesServiceTest {
         Mockito.when(filesRepository.findFilesByUserIdAndFilename(user.getId(), FILE_NAME))
                 .thenReturn((Optional.empty()));
 
-        Files createdFile = Files.builder()
+        File createdFile = File.builder()
                 .filename(FILE_NAME)
                 .createdAt(LocalDate.now())
                 .size((int) multipartFile.getSize())
@@ -111,7 +110,7 @@ public class FilesServiceTest {
                 .user(user)
                 .build();
 
-        filesService.uploadFile(TOKEN, FILE_NAME, multipartFile);
+        filesService.uploadFile(user, FILE_NAME, multipartFile);
 
         verify(filesRepository).save(createdFile);
     }

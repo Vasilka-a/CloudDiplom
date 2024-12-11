@@ -1,11 +1,9 @@
 package com.diplom.cloudstorage.service;
 
-import com.diplom.cloudstorage.dtos.FileDto;
-import com.diplom.cloudstorage.entity.Files;
+import com.diplom.cloudstorage.entity.File;
 import com.diplom.cloudstorage.entity.User;
 import com.diplom.cloudstorage.exceptions.CrudExceptions;
 import com.diplom.cloudstorage.exceptions.InputDataException;
-import com.diplom.cloudstorage.jwt.JwtUtils;
 import com.diplom.cloudstorage.repository.FilesRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -23,15 +21,13 @@ import java.util.List;
 @AllArgsConstructor
 public class FilesService {
     private final FilesRepository filesRepository;
-    private final JwtUtils jwtUtils;
 
-    public void uploadFile(String authToken, String fileName, MultipartFile file) {
-        User user = jwtUtils.getAuthenticatedUser(authToken);
+    public void uploadFile(User user, String fileName, MultipartFile file) {
         if (filesRepository.findFilesByUserIdAndFilename(user.getId(), fileName).isPresent()) {
             throw new InputDataException("Error input data", user.getId());
         }
         try {
-            Files newFile = Files.builder()
+            File newFile = File.builder()
                     .filename(fileName)
                     .createdAt(LocalDate.now())
                     .size((int) file.getSize())
@@ -43,8 +39,7 @@ public class FilesService {
         }
     }
 
-    public void deleteFile(String authToken, String fileName) {
-        User user = jwtUtils.getAuthenticatedUser(authToken);
+    public void deleteFile(User user, String fileName) {
         if (getFileFromRepository(user.getId(), fileName) != null) {
             if (filesRepository.deleteFilesByFilename(user.getId(), fileName) == 0) {
                 throw new CrudExceptions("Error delete file", user.getId());
@@ -52,9 +47,8 @@ public class FilesService {
         }
     }
 
-    public byte[] downloadFile(String authToken, String fileName) {
-        User user = jwtUtils.getAuthenticatedUser(authToken);
-        Files file = getFileFromRepository(user.getId(), fileName);
+    public byte[] downloadFile(User user, String fileName) {
+        File file = getFileFromRepository(user.getId(), fileName);
         if (file != null) {
             byte[] fileContent = file.getFileContent();
             if (fileContent != null) {
@@ -64,21 +58,19 @@ public class FilesService {
         throw new CrudExceptions("Error download file", user.getId());
     }
 
-    public void updateFile(String authToken, String fileName, FileDto file) {
-        User user = jwtUtils.getAuthenticatedUser(authToken);
+    public void updateFile(User user, String fileName, String newFileName) {
         if (getFileFromRepository(user.getId(), fileName) != null) {
-            if (filesRepository.updateFileByFilename(file.getFilename(), user.getId(), fileName) == 0) {
+            if (filesRepository.updateFileByFilename(newFileName, user.getId(), fileName) == 0) {
                 throw new CrudExceptions("Error update file", user.getId());
             }
         }
     }
 
-    public List<Files> getAllFiles(String authToken, int limit) {
-        User user = jwtUtils.getAuthenticatedUser(authToken);
+    public List<File> getAllFiles(User user, int limit) {
         return filesRepository.getFilesByUserWithLimit(user.getId(), limit);
     }
 
-    private Files getFileFromRepository(Long userId, String fileName) {
+    private File getFileFromRepository(Long userId, String fileName) {
         return filesRepository.findFilesByUserIdAndFilename(userId, fileName)
                 .orElseThrow(() -> new InputDataException("Error input data", userId));
     }
